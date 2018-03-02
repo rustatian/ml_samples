@@ -6,7 +6,3 @@ A sigmoid function is a mathematical function having a characteristic "S"-shaped
 f = 1/(1 + exp(-z))
 
 For more information, read: https://en.wikipedia.org/wiki/Sigmoid_function
-
---------
-
-<a href="https://adexin.com/contact-us/">Contact us</a> if you have any questions. Use our <a href="https://adexin.com/services/machine-learning-consulting/">Machine learning development services</a>.
