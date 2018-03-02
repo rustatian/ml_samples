@@ -15,7 +15,3 @@ Decision trees are commonly used in operations research and operations managemen
 
 Decision trees, influence diagrams, utility functions, and other decision analysis tools and methods are taught to undergraduate students in schools of business, health economics, and public health, and are examples of operations research or management science methods.
 For more information see: https://en.wikipedia.org/wiki/Decision_tree
-
---------
-
-<a href="https://adexin.com/contact-us/">Contact us</a> if you have any questions. Use our <a href="https://adexin.com/services/machine-learning-consulting/">Machine learning development services</a>.
