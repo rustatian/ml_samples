@@ -1,0 +1,1 @@
+# Sample of logistic regression train on picture
