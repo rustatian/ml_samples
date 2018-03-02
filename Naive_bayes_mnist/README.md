@@ -9,7 +9,3 @@ Despite their naive design and apparently oversimplified assumptions, naive Baye
 
 An advantage of naive Bayes is that it only requires a small number of training data to estimate the parameters necessary for classification.
 For more information see: https://en.wikipedia.org/wiki/Naive_Bayes_classifier
-
---------
-
-<a href="https://adexin.com/contact-us/">Contact us</a> if you have any questions. Use our <a href="https://adexin.com/services/machine-learning-consulting/">Machine learning development services</a>.
