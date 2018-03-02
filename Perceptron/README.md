@@ -7,7 +7,3 @@ In machine learning, the perceptron is an algorithm for supervised learning of b
 The perceptron algorithm dates back to the late 1950s; its first implementation, in custom hardware, was one of the first artificial neural networks to be produced.
 
 For more information: https://en.wikipedia.org/wiki/Perceptron
-
---------
-
-<a href="https://adexin.com/contact-us/">Contact us</a> if you have any questions. Use our <a href="https://adexin.com/services/machine-learning-consulting/">Machine learning development services</a>.
