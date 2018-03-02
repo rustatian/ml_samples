@@ -13,7 +13,3 @@
 11. <a href="https://github.com/adexin/Python-Machine-Learning-Samples/tree/master/Regressions_sklearn">Sklearn regression sample</a>
 12. <a href="https://github.com/adexin/Python-Machine-Learning-Samples/tree/master/Tensorflow_basics">Tensorflow samples</a>
 13. <a href="https://github.com/adexin/Python-Machine-Learning-Samples/tree/master/Theano_basics">Theano samples</a>
-
---------
-
-<a href="https://adexin.com/contact-us/">Contact us</a> if you have any questions. Use our <a href="https://adexin.com/services/machine-learning-consulting/">Machine learning development services</a>.
