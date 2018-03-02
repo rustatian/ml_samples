@@ -7,7 +7,3 @@ Despite its simplicity, nearest neighbors has been successful in a large number 
 ![](http://scikit-learn.org/stable/_images/sphx_glr_plot_kmeans_assumptions_0011.png)
 
 ![](http://scikit-learn.org/stable/_images/sphx_glr_plot_kmeans_digits_0011.png)
-
------------------------------
-
-<a href="https://adexin.com/contact-us/">Contact us</a> if you have any questions. Use our <a href="https://adexin.com/services/machine-learning-consulting/">Machine learning development services</a>.
