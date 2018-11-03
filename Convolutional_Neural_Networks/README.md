@@ -9,4 +9,6 @@ Convolutional networks were inspired by biological processes in which the connec
 
 CNNs use relatively little pre-processing compared to other image classification algorithms. This means that the network learns the filters that in traditional algorithms were hand-engineered. This independence from prior knowledge and human effort in feature design is a major advantage.
 
+# train mat file with house numbers you can download at http://ufldl.stanford.edu/housenumbers/
+
 For more information: https://en.wikipedia.org/wiki/Convolutional_neural_network
