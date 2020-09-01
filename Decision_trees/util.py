@@ -5,7 +5,7 @@ import pandas as pd
 def get_data(limit=None):
     print("Reading in and transforming data...")
     df = pd.read_csv('train.csv')
-    data = df.as_matrix()
+    data = df.to_numpy()
     np.random.shuffle(data)
     X = data[:, 1:] / 255.0
     Y = data[:, 0]
@@ -17,7 +17,7 @@ def get_data(limit=None):
 def get_test_data(limit=None):
     print("Reading in and transforming test data...")
     df = pd.read_csv('test.csv')
-    data = df.as_matrix()
+    data = df.to_numpy()
     np.random.shuffle(data)
     X = data[:, 1:] / 255.0
     Y = data[:, 0]
