@@ -137,7 +137,7 @@ def update_parameters_with_momentum(parameters, grads, v, beta, learning_rate):
         parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - learning_rate * v["dW" + str(l + 1)]
         parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - learning_rate * v["db" + str(l + 1)]
 
-    return parameters, v
+    return parameters, vyt
 
 
 def initialize_adam(parameters):
