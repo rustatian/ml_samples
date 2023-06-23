@@ -3,7 +3,6 @@ from scipy.signal import convolve2d
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-
 # Custom Convolution
 def conv2d(X, W):
     n1, n2 = X.shape
@@ -17,6 +16,7 @@ def conv2d(X, W):
                         y[i, j] = W[ii, jj] * X[i - ii, j - jj]
 
     return y
+
 
 img = mpimg.imread('lena.png')
 
