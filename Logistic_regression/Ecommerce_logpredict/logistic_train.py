@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 def get_data():
     df = pd.read_csv('ecommerce_data.csv')
-    data = df.as_matrix()
+    data = df.to_numpy()
 
     # Input data
     X = data[:, :-1]

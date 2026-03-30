@@ -4,7 +4,7 @@ import pandas as pd
 
 def get_data():
     df = pd.read_csv('ecommerce_data.csv')
-    data = df.as_matrix()
+    data = df.to_numpy()
 
     # Input data
     X = data[:, :-1]
@@ -56,7 +56,7 @@ b = 0
 
 
 def sigmoid(a):
-    return 1 / (1 - np.exp(-a))
+    return 1 / (1 + np.exp(-a))
 
 
 def forward(X, W, b):

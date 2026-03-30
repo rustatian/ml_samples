@@ -7,9 +7,7 @@ from keras.layers import AveragePooling2D, Input, Flatten
 from tensorflow.keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras.callbacks import ReduceLROnPlateau
-from keras.preprocessing.image import ImageDataGenerator
 from keras.regularizers import l2
-from keras import backend as K
 from tensorboard.plugins.hparams import api as hp
 from keras.models import Model
 from keras.datasets import cifar10
@@ -20,7 +18,7 @@ import os
 batch_size = 32  # orig paper trained all networks with batch_size=128
 epochs = 200
 data_augmentation = True
-num_classes = 10
+num_output_classes = 10
 
 # Subtracting pixel mean improves accuracy
 subtract_pixel_mean = True
@@ -47,18 +45,20 @@ version = 1
 
 # Computed depth from supplied model parameter n
 if version == 1:
-    depth = n * 6 + 2
+    model_depth = n * 6 + 2
 elif version == 2:
-    depth = n * 9 + 2
+    model_depth = n * 9 + 2
+else:
+    raise ValueError(f'Unsupported version: {version}. Must be 1 or 2.')
 
 # Model name, depth and version
-model_type = 'ResNet%dv%d' % (depth, version)
+model_type = 'ResNet%dv%d' % (model_depth, version)
 
 # Load the CIFAR10 data.
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
 # Input image dimensions.
-input_shape = x_train.shape[1:]
+input_shape_data = x_train.shape[1:]
 
 # Normalize data.
 x_train = x_train.astype('float32') / 255
@@ -76,8 +76,8 @@ print(x_test.shape[0], 'test samples')
 print('y_train shape:', y_train.shape)
 
 # Convert class vectors to binary class matrices.
-y_train = to_categorical(y_train, num_classes)
-y_test = to_categorical(y_test, num_classes)
+y_train = to_categorical(y_train, num_output_classes)
+y_test = to_categorical(y_test, num_output_classes)
 
 
 def lr_schedule(epoch):
@@ -109,7 +109,7 @@ def resnet_layer(inputs,
                  num_filters=16,
                  kernel_size=3,
                  strides=1,
-                 activation='relu',
+                 activation: str | None = 'relu',
                  batch_normalization=True,
                  conv_first=True):
     """2D Convolution-Batch Normalization-Activation stack builder
@@ -253,6 +253,7 @@ def resnet_v2(input_shape, depth, num_classes=10):
         raise ValueError('depth should be 9n+2 (eg 56 or 110 in [b])')
     # Start model definition.
     num_filters_in = 16
+    num_filters_out = num_filters_in * 4
     num_res_blocks = int((depth - 2) / 9)
 
     inputs = Input(shape=input_shape)
@@ -321,19 +322,19 @@ def resnet_v2(input_shape, depth, num_classes=10):
 
 
 if version == 2:
-    model = resnet_v2(input_shape=input_shape, depth=depth)
+    trained_model = resnet_v2(input_shape=input_shape_data, depth=model_depth)
 else:
-    model = resnet_v1(input_shape=input_shape, depth=depth)
+    trained_model = resnet_v1(input_shape=input_shape_data, depth=model_depth)
 
-model.compile(loss='categorical_crossentropy',
-              optimizer=Adam(lr=lr_schedule(0)),
-              metrics=['accuracy'])
-model.summary()
+trained_model.compile(loss='categorical_crossentropy',
+                      optimizer=Adam(learning_rate=lr_schedule(0)),
+                      metrics=['accuracy'])
+trained_model.summary()
 print(model_type)
 
 # Prepare model model saving directory.
 save_dir = os.path.join(os.getcwd(), 'saved_models')
-model_name = 'cifar10_%s_model.{epoch:03d}.h5' % model_type
+model_name = 'cifar10_%s_model.{epoch:03d}.keras' % model_type
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
 filepath = os.path.join(save_dir, model_name)
@@ -350,7 +351,7 @@ hparams_callback = hp.KerasCallback(log_dir, {
 
 # Prepare callbacks for model saving and for learning rate adjustment.
 checkpoint = ModelCheckpoint(filepath=filepath,
-                             monitor='val_acc',
+                             monitor='val_accuracy',
                              verbose=1,
                              save_best_only=True)
 
@@ -366,7 +367,7 @@ callbacks = [checkpoint, lr_reducer, lr_scheduler, tensorboard_callback, hparams
 # Run training, with or without data augmentation.
 if not data_augmentation:
     print('Not using data augmentation.')
-    model.fit(x_train, y_train,
+    trained_model.fit(x_train, y_train,
               batch_size=batch_size,
               epochs=epochs,
               validation_data=(x_test, y_test),
@@ -374,60 +375,28 @@ if not data_augmentation:
               callbacks=callbacks)
 else:
     print('Using real-time data augmentation.')
-    # This will do preprocessing and realtime data augmentation:
-    datagen = ImageDataGenerator(
-        # set input mean to 0 over the dataset
-        featurewise_center=False,
-        # set each sample mean to 0
-        samplewise_center=False,
-        # divide inputs by std of dataset
-        featurewise_std_normalization=False,
-        # divide each input by its std
-        samplewise_std_normalization=False,
-        # apply ZCA whitening
-        zca_whitening=False,
-        # epsilon for ZCA whitening
-        zca_epsilon=1e-06,
-        # randomly rotate images in the range (deg 0 to 180)
-        rotation_range=0,
-        # randomly shift images horizontally
-        width_shift_range=0.1,
-        # randomly shift images vertically
-        height_shift_range=0.1,
-        # set range for random shear
-        shear_range=0.,
-        # set range for random zoom
-        zoom_range=0.,
-        # set range for random channel shifts
-        channel_shift_range=0.,
-        # set mode for filling points outside the input boundaries
-        fill_mode='nearest',
-        # value used for fill_mode = "constant"
-        cval=0.,
-        # randomly flip images
-        horizontal_flip=True,
-        # randomly flip images
-        vertical_flip=False,
-        # set rescaling factor (applied before any other transformation)
-        rescale=None,
-        # set function that will be applied on each input
-        preprocessing_function=None,
-        # image data format, either "channels_first" or "channels_last"
-        data_format=None,
-        # fraction of images reserved for validation (strictly between 0 and 1)
-        validation_split=0.0)
+    # Data augmentation using Keras preprocessing layers
+    data_augmentation_layers = keras.Sequential([
+        keras.layers.RandomFlip("horizontal"),
+        keras.layers.RandomTranslation(height_factor=0.1, width_factor=0.1),
+    ])
 
-    # Compute quantities required for featurewise normalization
-    # (std, mean, and principal components if ZCA whitening is applied).
-    datagen.fit(x_train)
+    # Create a tf.data.Dataset with augmentation
+    train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
+    train_dataset = train_dataset.shuffle(buffer_size=x_train.shape[0])
+    train_dataset = train_dataset.batch(batch_size)
+    train_dataset = train_dataset.map(
+        lambda x, y: (data_augmentation_layers(x, training=True), y),
+        num_parallel_calls=tf.data.AUTOTUNE,
+    )
+    train_dataset = train_dataset.prefetch(tf.data.AUTOTUNE)
 
-    # Fit the model on the batches generated by datagen.flow().
-    model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                        validation_data=(x_test, y_test),
-                        epochs=epochs, verbose=1, workers=4,
-                        callbacks=callbacks)
+    trained_model.fit(train_dataset,
+              validation_data=(x_test, y_test),
+              epochs=epochs, verbose=1,
+              callbacks=callbacks)
 
 # Score trained model.
-scores = model.evaluate(x_test, y_test, verbose=1)
+scores = trained_model.evaluate(x_test, y_test, verbose=1)
 print('Test loss:', scores[0])
 print('Test accuracy:', scores[1])

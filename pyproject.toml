@@ -1,0 +1,24 @@
+[project]
+name = "ml-samples"
+version = "0.1.0"
+description = "Machine learning and data science samples in Python"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "better-exceptions>=0.3.3",
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.4",
+    "pandas>=2.2.0",
+    "scikit-learn>=1.8.0",
+    "scipy>=1.17.1",
+    "scipy-stubs~=1.17.1",
+    "tensorboard>=2.20.0",
+    "tensorflow>=2.21.0",
+    "torch>=2.6.0",
+]
+
+[project.optional-dependencies]
+whisper = ["openai-whisper", "requests", "minio"]
+gcloud = ["google-cloud-aiplatform"]
+genai = ["openai"]
+vision = ["opencv-python"]

@@ -2,8 +2,6 @@
 import numpy as np
 import util
 from datetime import datetime
-from scipy.stats import norm
-import better_exceptions
 from scipy.stats import multivariate_normal as mvn
 
 

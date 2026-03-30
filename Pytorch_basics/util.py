@@ -6,7 +6,7 @@ from sklearn.decomposition import PCA
 def get_transformed_data():
     print("Reading in and transforming data...")
     df = pd.read_csv('train.csv')
-    data = df.as_matrix().astype(np.float32)
+    data = df.to_numpy().astype(np.float32)
     np.random.shuffle(data)
 
     X = data[:, 1:]
@@ -22,7 +22,7 @@ def get_transformed_data():
 def get_normalized_data():
     print("Reading in and transforming data...")
     df = pd.read_csv('train.csv')
-    data = df.as_matrix().astype(np.float32)
+    data = df.to_numpy().astype(np.float32)
     np.random.shuffle(data)
     X = data[:, 1:]
     mu = X.mean(axis=0)
